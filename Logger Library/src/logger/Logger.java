@@ -12,4 +12,6 @@ public interface Logger {
 
     void error(String message);
 
+    void shutdown();
+
 }

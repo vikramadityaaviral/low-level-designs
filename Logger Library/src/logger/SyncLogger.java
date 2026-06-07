@@ -8,7 +8,8 @@ import java.util.List;
 
 public class SyncLogger extends AbstractLogger {
 
-    private List<Appender> appenders;
+    private final List<Appender> appenders;
+    private volatile boolean closed = false;
 
     public SyncLogger(LogLevel logLevel, DateTimeFormatter dateTimeFormatter, List<Appender> appenders) {
         super(logLevel, dateTimeFormatter);
@@ -49,5 +50,22 @@ public class SyncLogger extends AbstractLogger {
     @Override
     public void error(String message) {
         processLog(LogLevel.ERROR, message);
+    }
+
+    @Override
+    public synchronized void shutdown() {
+        if (closed) {
+            return;
+        }
+
+        for (Appender appender : appenders) {
+            try {
+                appender.close();
+            } catch (Exception e) {
+                System.err.println("Failed to close appender: " + e.getMessage());
+            }
+        }
+
+        closed = true;
     }
 }

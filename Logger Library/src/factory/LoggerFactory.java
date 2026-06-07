@@ -47,13 +47,15 @@ public class LoggerFactory {
         return loggerRegistry.computeIfAbsent(key, k -> {
             DisrupterRingBuffer ringBuffer = new DisrupterRingBuffer(bufferCapacity);
             List<Appender> appenderList = appenders.stream().map(LoggerFactory::getAppenderByType).toList();
-            // Start consumers
-            appenderList.forEach(appender -> new DisrupterRingBufferConsumer(appender, ringBuffer));
+
+            List<DisrupterRingBufferConsumer> consumers = appenderList.stream()
+                    .map(appender -> new DisrupterRingBufferConsumer(appender, ringBuffer))
+                    .toList();
 
             LogLevel level = LogLevel.valueOf(logLevel);
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(datetimeFormat).withZone(ZoneId.of("UTC"));
 
-            return new AsyncLogger(level, dateTimeFormatter, ringBuffer);
+            return new AsyncLogger(level, dateTimeFormatter, ringBuffer, consumers);
         });
     }
 }

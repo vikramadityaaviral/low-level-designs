@@ -7,4 +7,10 @@ public class ConsoleAppender implements Appender {
         System.out.println(formattedLogMessage);
     }
 
+    @Override
+    public void close() {
+
+    }
+
+
 }
