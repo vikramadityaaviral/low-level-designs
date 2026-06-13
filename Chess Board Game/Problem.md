@@ -1,4 +1,4 @@
-# Problem Statement: Chess Board Game (Machine Coding)
+# Chess Board Game - Machine Coding Problem Statement
 
 ## Overview
 Design and implement a console-based, two-player Chess Game Application. The game will execute programmatically via a series of coordinates or command inputs, simulate player turns, validate moves against strict chess rules, and manage the state of the board until a game-ending condition occurs.
